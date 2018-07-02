@@ -2,23 +2,18 @@
 $.getJSON("/articles", function(data){
     for (var i=0; i<data.length; i++){
         $("#articles").append(`
-        <div class="articleGroup">
-            <p data-id="${data[i]._id}">
-                ${data[i].title}
-                <br/>
-                ${data[i].link}
-            </p>
-            <button type="button" class="btn btn-danger noteBtn" data-id="${data[i]._id}">
-                Add a Note
-            </button>
-            <br />
-            <br />
+
+        <div class="card" style="width: 35rem;">
+            <div class="card-body">
+                <h5 class="card-title" data-id="${data[i]._id}">${data[i].title}</h5>
+                <p class="card-text">${data[i].link}</p>
+                <button type="button" class="btn btn-danger noteBtn" data-id="${data[i]._id}">Add a Note</button>
+            </div>
         </div>
+        <br/>
         `);
     }
 });
-
-{/* <div class="notes" data-id="${data[i]._id}"></div> */}
 
 //click event for adding a note
 $(document).on("click", ".noteBtn", function(){
@@ -50,7 +45,7 @@ $(document).on("click", ".noteBtn", function(){
 
         if (data.note){
             $("#titleInput").val(data.note.title);
-            $("bodyInput").val(data.note.body);
+            $("#bodyInput").val(data.note.body);
         }
     });
 });
