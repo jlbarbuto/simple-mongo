@@ -3,7 +3,7 @@ $.getJSON("/articles", function(data){
     for (var i=0; i<data.length; i++){
         $("#articles").append(`
         <div class="articleGroup">
-            <p>
+            <p data-id="${data[i]._id}">
                 ${data[i].title}
                 <br/>
                 ${data[i].link}
@@ -11,8 +11,6 @@ $.getJSON("/articles", function(data){
             <button type="button" class="btn btn-danger noteBtn" data-id="${data[i]._id}">
                 Add a Note
             </button>
-            <div class="notes" data-id="${data[i]._id}"></div>
-            <br />
             <br />
             <br />
         </div>
@@ -20,9 +18,11 @@ $.getJSON("/articles", function(data){
     }
 });
 
+{/* <div class="notes" data-id="${data[i]._id}"></div> */}
+
 //click event for adding a note
 $(document).on("click", ".noteBtn", function(){
-    $(".notes").empty();
+    $("#notes").empty();
     var thisId = $(this).attr("data-id");
     
     $.ajax({
@@ -31,12 +31,20 @@ $(document).on("click", ".noteBtn", function(){
     })
     .then(function(data){
         console.log(data);
-        $(".notes").append(`
-            <h2>
+        $("#notes").append(`
+            <h4>
                 ${data.title}
-            </h2>
-            <input id="titleInput" name="title">
-            <textarea id="bodyInput" name="body"></textarea>
+            </h4>
+            <div class="col">
+                <div class="row">
+                    <input id="titleInput" name="title">
+                </div>
+                <br/>
+                <div class="row">
+                    <textarea id="bodyInput" name="body"></textarea>
+                </div>
+            </div>
+            <br/>
             <button type="button" class="btn" data-id="${data._id}" id="savenote">Save Note</button>
         `);
 
@@ -45,4 +53,23 @@ $(document).on("click", ".noteBtn", function(){
             $("bodyInput").val(data.note.body);
         }
     });
+});
+
+//click event for saving a note
+$(document).on("click", "#savenote", function(){
+    var thisId = $(this).attr("data-id");
+    $.ajax({
+        method: "POST",
+        url: "/articles/" + thisId,
+        data: {
+            title: $("#titleInput").val(),
+            body: $("#bodyInput").val()
+        }
+    })
+        .then(function(data){
+            console.log(data);
+            $("#notes").empty();
+        });
+    $("#titleInput").val("");
+    $("#bodyInput").val("");
 });

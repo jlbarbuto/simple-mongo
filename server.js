@@ -59,6 +59,18 @@ app.get("/articles", function(req, res){
         });
 });
 
+//route to populate an article (found with id) with a note
+app.get("/articles/:id", function(req, res){
+    db.Article.findOne({_id: req.params.id})
+        .populate("note")
+        .then(function(dbArticle){
+            res.json(dbArticle);
+        })
+        .catch(function(err){
+            res.json(err);
+        });
+});
+
 //route to save/update a note with a specific article
 app.post("/articles/:id", function(req, res){
     db.Note.create(req.body)
