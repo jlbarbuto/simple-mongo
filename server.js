@@ -59,6 +59,22 @@ app.get("/articles", function(req, res){
         });
 });
 
+//route to save/update a note with a specific article
+app.post("/articles/:id", function(req, res){
+    db.Note.create(req.body)
+        .then(function(dbNote){
+            //after creating a note, find the article w/ matching id and add the note to its doc
+            return db.Article.findOneAndUpdate(
+                {_id: req.params.id}, {note: dbNote._id}, {new: true});
+        })
+        .then(function(dbArticle){
+            res.json(dbArticle);
+        })
+        .catch(function(err){
+            res.json(err);
+        });
+});
+
 // Start server
 app.listen(PORT, function() {
     console.log("App running on port " + PORT + "!");
