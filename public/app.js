@@ -27,20 +27,21 @@ $(document).on("click", ".noteBtn", function(){
     .then(function(data){
         console.log(data);
         $("#notes").append(`
-            <h4>
-                ${data.title}
-            </h4>
-            <div class="col">
-                <div class="row">
-                    <input id="titleInput" name="title">
+
+            <form>
+                <h3>Insert a Note</h3>
+                <h5>${data.title}</h5>
+                <div class="form-group">
+                    <label for="noteTitle">Title:</label>
+                    <input type="note" class="form-control" id="titleInput" name="title">
                 </div>
-                <br/>
-                <div class="row">
-                    <textarea id="bodyInput" name="body"></textarea>
+                <div class="form-group">
+                    <label for="noteBody">Note:</label>
+                    <textarea class="form-control" id="bodyInput" rows="3"></textarea>
                 </div>
-            </div>
-            <br/>
-            <button type="button" class="btn" data-id="${data._id}" id="savenote">Save Note</button>
+                <button type="submit" class="btn" data-id="${data._id}" id="savenote">Save Note</button>
+                <button type="submit" class="btn btn-danger" data-id="${data._id}" id="deletenote">Delete Note</button>
+            </form>
         `);
 
         if (data.note){
@@ -68,3 +69,16 @@ $(document).on("click", "#savenote", function(){
     $("#titleInput").val("");
     $("#bodyInput").val("");
 });
+
+$(document).on("click", "#deletenote", function(){
+    var thisId = $(this).attr("data-id");
+    $.ajax({
+        method: "POST",
+        url: "/del/" + thisId
+    })
+        .then(function(data){
+            $("notes").empty();
+        });
+    $("#titleInput").val("");
+    $("#bodyInput").val("");
+})

@@ -71,6 +71,20 @@ app.get("/articles/:id", function(req, res){
         });
 });
 
+//route to delete a notes input
+app.post("/del/:id", function(req, res){
+    db.Article.findOne({_id: req.params.id})
+        .then(function(dbArticle){
+            return db.Note.deleteOne({_id: req.params.id})
+        })
+        .then(function(dbArticle){
+            res.json(dbArticle);
+        })
+        .catch(function(err){
+            res.json(err);
+        });
+});
+
 //route to save/update a note with a specific article
 app.post("/articles/:id", function(req, res){
     db.Note.create(req.body)
