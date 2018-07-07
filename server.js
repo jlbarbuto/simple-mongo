@@ -18,7 +18,7 @@ app.use(logger("dev"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/simpleMongo"
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/simpleMongo";
 mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
